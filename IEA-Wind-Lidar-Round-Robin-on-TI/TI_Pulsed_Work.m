@@ -20,56 +20,23 @@ Lidar_10min = Calculate10minStastics_Lidar(Lidar_N,Lidar_S,Tstart,Tend);
 Lidar_10min.LOS_TI_N = Lidar_10min.LOS_N_std./Lidar_10min.LOS_N_mean; 
 Lidar_10min.LOS_TI_S = Lidar_10min.LOS_S_std./Lidar_10min.LOS_S_mean; 
 
+m           = 1;
+n           = 2;
 
-p_N = polyfit(Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,1); %Regression
-p_S = polyfit(Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,1);
+range_TI = [0, 0.5];
 
-x_N = [0 , 0.7];
-x_S = x_N;
-y_N = polyval(p_N, x_N); 
-y_S = polyval(p_S, x_S);
+figure('Name','Lidar TI vs Reference TI')
 
-r_N = corrcoef(Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N); %R = corealcoefficient ()
-r_S = corrcoef(Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S);
+RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
 
-r_srt_N = r_N(1,2)^2 ;%R^2 = determination coefficient
-r_srt_N_string = ['R^2 = ' , num2str(r_srt_N)]; 
-
-r_srt_S = r_S(1,2)^2;
-r_srt_S_string = ['R^2 = ' , num2str(r_srt_S)]; 
-
-x_r = 0.5*x_N(2);
-y_r = 0.2*x_N(2);
-
-figure('name','comparison TI');
-subplot(1,2,1);
-hold on; grid on; box on;
-plot(x_N,y_N) 
-plot(Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,'b.')
-text(x_r,y_r,r_srt_N_string); 
-title('Lidar TI_N über Reference TI_N')
-xlabel('TI Reference')
-ylabel('TI Lidar')
-axis equal
-xlim(x_N)
-ylim(x_N)
-
-subplot(1,2,2);
-hold on; grid on; box on;
-plot(x_S,y_S) 
-plot(Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,'b.')
-text(x_r,y_r,r_srt_S_string);
-title('Lidar TI_S über Reference TI_S')
-xlabel('TI Reference')
-ylabel('TI Lidar')
-axis equal
-xlim(x_S)
-ylim(x_S)
+RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
 
 %% Comparison Reference TI and Lidar TI data
-ComparisonData(Reference_10min,Lidar_10min) 
+% ComparisonData2(Reference_10min,Lidar_10min) 
 %% Metmast Data Comparison
-MetmastComparison(Mast_N,Mast_S,Reference_10min)
+% MetmastComparison2(Mast_N,Mast_S,Reference_10min)
 % change to 10min for comparison
 
 %% Sonic Data Comparison
@@ -94,14 +61,12 @@ end
 Sonic_10min.t           = t_vec(1:end-1);
 Sonic_10min.Timestamp   = datestr(t_vec(1:end-1),31);    
     
-SonicComparison(Sonic_10min)
-%time
+SonicComparison2(Sonic_10min)
+%% Cup Data Comparison
+% statistics
+% WD1 not on same hight as Cup
+CupComparison(Mast_N,Mast_S,Reference,Tstart,Tend)
+%% Timecomparison Cup Sonic
 Timecomparison_Cup_Sonic(Mast_N,Mast_S)
-
-
-
-
-
-
 
 
