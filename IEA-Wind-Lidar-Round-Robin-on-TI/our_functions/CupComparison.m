@@ -33,10 +33,10 @@ range_WD = [150, 300];
 
 figure('Name','Cup comparison North and South')
 RegressionSubPlot(m,n,1,Cup_10min.WS_N_mean,Cup_10min.WS_S_mean,...
-    range_MEAN,'Mean WS_N Cup','Mean WS_S Cup','10 min mean Windspeed North and South');
+    range_MEAN,'Mean WS_N Cup','Mean WS_S Cup',' Mean WS');
 
 RegressionSubPlot(m,n,2,Cup_10min.WS_N_std,Cup_10min.WS_S_std,...
-    range_STD, 'Std WS_N Cup','Std WS_S Cup','10 min std. Windspeed North and South');
+    range_STD, 'Std WS_N Cup','Std WS_S Cup','Std. WS');
 
 RegressionSubPlot(m,n,3,Cup_10min.WS_N_TI,Cup_10min.WS_S_TI,...
     range_TI,  'TI_N',  'TI_S',  'TI');

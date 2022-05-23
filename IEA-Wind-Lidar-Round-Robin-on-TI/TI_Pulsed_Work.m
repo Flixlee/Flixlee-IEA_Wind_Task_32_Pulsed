@@ -33,8 +33,10 @@ RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
 RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
     range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
 
+Lidar_Ref_statistics(Lidar_10min,Reference_10min)
+
 %% Comparison Reference TI and Lidar TI data
-% ComparisonData2(Reference_10min,Lidar_10min) 
+%ComparisonData2(Reference_10min,Lidar_10min) 
 %% Metmast Data Comparison
 % MetmastComparison2(Mast_N,Mast_S,Reference_10min)
 % change to 10min for comparison
