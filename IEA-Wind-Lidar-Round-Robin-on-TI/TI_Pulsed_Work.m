@@ -70,5 +70,5 @@ SonicComparison2(Sonic_10min)
 CupComparison(Mast_N,Mast_S,Reference,Tstart,Tend)
 %% Timecomparison Cup Sonic
 Timecomparison_Cup_Sonic(Mast_N,Mast_S)
-
-
+%% Cup vs Sonic statistics
+Cup_vs_Sonic(Mast_N,Mast_S,Reference,Tstart,Tend,Sonic_10min)
