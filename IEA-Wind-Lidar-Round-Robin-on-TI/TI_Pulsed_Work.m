@@ -34,13 +34,10 @@ RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
     range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
 
 Lidar_Ref_statistics(Lidar_10min,Reference_10min)
-
-%% Comparison Reference TI and Lidar TI data
-%ComparisonData2(Reference_10min,Lidar_10min) 
+ 
 %% Metmast Data Comparison
-% MetmastComparison2(Mast_N,Mast_S,Reference_10min)
-% change to 10min for comparison
-
+% TI N and TI S
+TI_Mast(Mast_N,Mast_S,Reference,Tstart,Tend,Sonic_10min)
 %% Sonic Data Comparison
 %statistics
 t1                          = datetime(Tstart); 
@@ -72,3 +69,20 @@ CupComparison(Mast_N,Mast_S,Reference,Tstart,Tend)
 Timecomparison_Cup_Sonic(Mast_N,Mast_S)
 %% Cup vs Sonic statistics
 Cup_vs_Sonic(Mast_N,Mast_S,Reference,Tstart,Tend,Sonic_10min)
+%% Load Lidar Period 2
+if isfile('Data_2.mat') % datenum takes a while, so we better store the data
+    load('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
+else 
+    
+    Lidar_N_2        	= readtable('Lidar_20201020-20201024_1Hz_LOS3_178m.csv');
+    Lidar_S_2       	= readtable('Lidar_20201020-20201024_1Hz_LOS2_178m.csv');
+    Lidar_10min_2       = readtable('Lidar_20201020-20201024_10min_new.csv');
+      
+    % add numeric time
+  
+    Lidar_N_2.t     	= datenum(Lidar_N_2.Timestamp,'yyyy-mm-ddTHH:MM:SS.FFF');
+    Lidar_S_2.t      	= datenum(Lidar_S_2.Timestamp,'yyyy-mm-ddTHH:MM:SS.FFF');
+    Lidar_10min_2.t     = datenum(Lidar_10min_2.DateAndTime,'dd/MM/yyyy HH:mm:ss'); % HILFE David
+    save('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
+end
+
