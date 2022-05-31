@@ -36,9 +36,9 @@ RegressionSubPlot(m,n,2,Sonic_10min.WS_S_mean,Cup_10min.WS_S_mean,...
     range_MEAN,'Mean WS_S Sonic [m/s]','Mean WS_S Cup [m/s]','Mean WS South');
 
 RegressionSubPlot(m,n,3,Sonic_10min.WD_N_mean,Cup_10min.WD_N_mean,...
-    range_WD,  'Mean WS_N Sonic [deg]','Mean WD_N Cup [deg]','Mean WD North');
+    range_WD,  'Mean WD_N Sonic [deg]','Mean WD_N Cup [deg]','Mean WD North');
 
 RegressionSubPlot(m,n,4,Sonic_10min.WD_S_mean,Sonic_10min.WD_N_mean,...
-    range_WD,  'Mean WS_S Sonic [deg]','Mean WD_S Cup [deg]','Mean WD South');
+    range_WD,  'Mean WD_S Sonic [deg]','Mean WD_S Cup [deg]','Mean WD South');
 end
 
