@@ -70,8 +70,35 @@ Cup_vs_Sonic(Mast_N,Mast_S,Reference,Tstart,Tend,Sonic_10min) %neu in auswertung
 % TI N and TI S
 TI_Mast(Mast_N,Mast_S,Reference,Tstart,Tend,Sonic_10min)
 %% "time" offset Lidar Northmast
-% dt = 6.5 s ?!
-% Calculate10minStastics_Lidar_offset(Lidar_N,Lidar_S,Tstart,Tend);
+% dt set to 4 sec
+Lidar_N_offset = readtable('Lidar_N_offset_day1.xlsx');
+Timecomparision_Reference_Lidar_N_offset(Reference,Lidar_N_offset,Lidar_N)
+
+for i_10min= 1:n_10min
+    Considered_N_offset                    = Lidar_N_offset.t>=t_vec(i_10min) & Lidar_N_offset.t<t_vec(i_10min+1);   
+    Lidar_10min_offset.LOS_N_offset_mean(i_10min) = nanmean(Lidar_N_offset.RWS(Considered_N_offset));
+    Lidar_10min_offset.LOS_N_offset_std(i_10min)  = nanstd (Lidar_N_offset.RWS(Considered_N_offset));
+    
+end
+
+
+Lidar_10min_offset.t           = t_vec(1:end-1);
+Lidar_10min_offset.Timestamp   = datestr(t_vec(1:end-1),31);
+
+Lidar_10min_offset.LOS_N_offset_TI = Lidar_10min_offset.LOS_N_offset_std./Lidar_10min_offset.LOS_N_offset_mean;
+
+m           = 1;
+n           = 2;
+
+range_TI = [0, 0.5];
+
+figure('Name','Lidar TI vs Lidar offset TI')
+
+RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+
+RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_N,Lidar_10min_offset.LOS_N_offset_TI,...
+    range_TI, 'TI Reference_N','TI Lidar offset_N ','10 min TI North');
 %% Load Lidar Period 2
 if isfile('Data_2.mat') % datenum takes a while, so we better store the data
     load('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
