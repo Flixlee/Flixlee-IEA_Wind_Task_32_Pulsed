@@ -99,6 +99,114 @@ RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
 
 RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_N,Lidar_10min_offset.LOS_N_offset_TI,...
     range_TI, 'TI Reference_N','TI Lidar offset_N ','10 min TI North');
+%% delta STD Lidar/Reference (Fit 1)
+d_TI_N = Reference_10min.LOS_N_std - Lidar_10min.LOS_N_std;
+d_TI_S = Reference_10min.LOS_S_std - Lidar_10min.LOS_S_std;
+
+d_TI_N = d_TI_N';
+d_TI_S = d_TI_S';
+
+figure('name','dTI over WD/WS')
+subplot(2,2,1);
+hold on; box on; grid on;
+scatter(Reference_10min.WD_N_mean,d_TI_N,'.')
+xlabel('mean WD_N [deg]')
+ylabel('dTI_N [m/s]') 
+title('dTI_N over mean WD_N')
+
+subplot(2,2,2);
+hold on; box on; grid on;
+scatter(Reference_10min.WD_S_mean,d_TI_S,'.')
+xlabel('mean WD_S [deg]')
+ylabel('dTI_S [m/s]') 
+title('dTI_S over mean WD_S')
+
+subplot(2,2,3);
+hold on; box on; grid on;
+scatter(Reference_10min.LOS_N_mean,d_TI_N,'.')
+xlabel('mean WS_N [m/s]')
+ylabel('dTI_N [m/s]') 
+title('dTI_N over mean WS_N')
+
+subplot(2,2,4);
+hold on; box on; grid on;
+scatter(Reference_10min.LOS_S_mean,d_TI_S,'.')
+xlabel('mean WS_S [m/s]')
+ylabel('dTI_S [m/s]') 
+title('dTI_S over mean WS_S')
+
+figure('name','Histogram dTI')
+subplot(2,1,1);
+hold on; box on; grid on;
+histogram(d_TI_N)
+xlabel('dTI_N [m/s]')
+ylabel('n') 
+title('dTI_N')
+
+subplot(2,1,2);
+hold on; box on; grid on;
+histogram(d_TI_S)
+xlabel('dTI_S [m/s]')
+ylabel('n') 
+title('dTI_S')
+
+mean_d_TI_N = mean(d_TI_N);
+mean_d_TI_S = mean(d_TI_S);
+
+Lidar_10min.LOS_N_std_fit1 = Lidar_10min.LOS_N_std + mean_d_TI_N;
+Lidar_10min.LOS_S_std_fit1 = Lidar_10min.LOS_S_std + mean_d_TI_S;
+
+Lidar_10min.LOS_TI_N_fit1 = Lidar_10min.LOS_N_std_fit1./Lidar_10min.LOS_N_mean; 
+Lidar_10min.LOS_TI_S_fit1 = Lidar_10min.LOS_S_std_fit1./Lidar_10min.LOS_S_mean;
+
+m           = 2;
+n           = 2;
+
+range_TI = [0, 0.5];
+
+figure('Name','Lidar TI vs Reference TI')
+
+RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+
+RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
+
+RegressionSubPlot(m,n,3,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N_fit1,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+
+RegressionSubPlot(m,n,4,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S_fit1,...
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South'); 
+% Fit 1 works for South Mast 
+% on North Mast problem with the incline of the Fit
+%% Fit incline on North Mast
+if Lidar_10min.LOS_N_mean <= 5.75;
+    Lidar_10min.LOS_N_std_fit2 = Lidar_10min.LOS_N_std + 0.75;
+else
+    Lidar_10min.LOS_N_mean > 5.75;
+    Lidar_10min.LOS_N_std_fit2 = Lidar_10min.LOS_N_std + mean_d_TI_N;
+end
+    
+Lidar_10min.LOS_TI_N_fit2 = Lidar_10min.LOS_N_std_fit2./Lidar_10min.LOS_N_mean; 
+
+m           = 2;
+n           = 2;
+
+range_TI = [0, 0.5];
+
+figure('Name','Lidar TI vs Reference TI')
+
+RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+
+RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
+
+RegressionSubPlot(m,n,3,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N_fit2,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+
+RegressionSubPlot(m,n,4,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S_fit1,...
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');    
 %% Load Lidar Period 2
 if isfile('Data_2.mat') % datenum takes a while, so we better store the data
     load('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
