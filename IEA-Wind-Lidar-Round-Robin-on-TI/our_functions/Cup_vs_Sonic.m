@@ -6,7 +6,7 @@ t_vec                       = datenum(t1:minutes(10):t2);
 
 n_10min                     = length(t_vec)-1;
 for i_10min= 1:n_10min
-    Considered            = Reference.t>=t_vec(i_10min) & Reference.t<t_vec(i_10min+1);
+    Considered            = Reference.t_N>=t_vec(i_10min) & Reference.t_N<t_vec(i_10min+1);
 	Cup_10min.WS_N_mean(i_10min)    = nanmean(Mast_N.WS1 (Considered));     
     Cup_10min.WS_S_mean(i_10min)    = nanmean(Mast_S.WS1 (Considered)); 
   	Cup_10min.WS_N_std(i_10min)     = nanstd (Mast_N.WS1 (Considered)); 

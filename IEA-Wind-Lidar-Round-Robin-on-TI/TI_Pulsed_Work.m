@@ -3,11 +3,11 @@ RoundRoubin_ReferencePulsed
 addpath('our_functions')
 %% Task 1 Part1: clean data (9999 in Lidar_N.RWS bzw Lidar_S.RWS)
 
-Fehlerwerte = Lidar_N.RWS==9999; %Logical Array 
-Lidar_N.RWS(Fehlerwerte)=interp1(Lidar_N.t(~Fehlerwerte),Lidar_N.RWS(~Fehlerwerte),Lidar_N.t(Fehlerwerte)); 
+mistake = Lidar_N.RWS==9999; %Logical Array 
+Lidar_N.RWS(mistake)=interp1(Lidar_N.t(~mistake),Lidar_N.RWS(~mistake),Lidar_N.t(mistake)); 
 
-Fehlerwerte = Lidar_S.RWS==9999;
-Lidar_S.RWS(Fehlerwerte)=interp1(Lidar_S.t(~Fehlerwerte),Lidar_S.RWS(~Fehlerwerte),Lidar_S.t(Fehlerwerte)); 
+mistake = Lidar_S.RWS==9999;
+Lidar_S.RWS(mistake)=interp1(Lidar_S.t(~mistake),Lidar_S.RWS(~mistake),Lidar_S.t(mistake)); 
 
 % call function for Timecomparison Reference Lidar LOS 1 day and 10 min
 Timecomparison_Reference_Lidar_LOS(Reference,Lidar_N,Lidar_S)
@@ -43,7 +43,7 @@ t_vec                       = datenum(t1:minutes(10):t2);
 
 n_10min                     = length(t_vec)-1;
 for i_10min= 1:n_10min
-    Considered            = Reference.t>=t_vec(i_10min) & Reference.t<t_vec(i_10min+1);
+    Considered            = Reference.t_N>=t_vec(i_10min) & Reference.t_N<t_vec(i_10min+1);
 	Sonic_10min.WS_N_mean(i_10min)    = nanmean(Mast_N.USA_WShorizontal (Considered));     
     Sonic_10min.WS_S_mean(i_10min)    = nanmean(Mast_S.USA_WShorizontal (Considered)); 
   	Sonic_10min.WS_N_std(i_10min)     = nanstd (Mast_N.USA_WShorizontal (Considered)); 
@@ -100,61 +100,61 @@ RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
 RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_N,Lidar_10min_offset.LOS_N_offset_TI,...
     range_TI, 'TI Reference_N','TI Lidar offset_N ','10 min TI North');
 %% delta STD Lidar/Reference (Fit 1)
-d_TI_N = Reference_10min.LOS_N_std - Lidar_10min.LOS_N_std;
-d_TI_S = Reference_10min.LOS_S_std - Lidar_10min.LOS_S_std;
+d_std_N = Reference_10min.LOS_N_std - Lidar_10min.LOS_N_std;
+d_std_S = Reference_10min.LOS_S_std - Lidar_10min.LOS_S_std;
 
-d_TI_N = d_TI_N';
-d_TI_S = d_TI_S';
+d_std_N = d_std_N';
+d_std_S = d_std_S';
 
-figure('name','dTI over WD/WS')
+figure('name','dstd over WD/WS')
 subplot(2,2,1);
 hold on; box on; grid on;
-scatter(Reference_10min.WD_N_mean,d_TI_N,'.')
+scatter(Reference_10min.WD_N_mean,d_std_N,'.')
 xlabel('mean WD_N [deg]')
-ylabel('dTI_N [m/s]') 
-title('dTI_N over mean WD_N')
+ylabel('dstd_N [m/s]') 
+title('dstd_N over mean WD_N')
 
 subplot(2,2,2);
 hold on; box on; grid on;
-scatter(Reference_10min.WD_S_mean,d_TI_S,'.')
+scatter(Reference_10min.WD_S_mean,d_std_S,'.')
 xlabel('mean WD_S [deg]')
-ylabel('dTI_S [m/s]') 
-title('dTI_S over mean WD_S')
+ylabel('dstd_S [m/s]') 
+title('dstd_S over mean WD_S')
 
 subplot(2,2,3);
 hold on; box on; grid on;
-scatter(Reference_10min.LOS_N_mean,d_TI_N,'.')
+scatter(Reference_10min.LOS_N_mean,d_std_N,'.')
 xlabel('mean WS_N [m/s]')
-ylabel('dTI_N [m/s]') 
-title('dTI_N over mean WS_N')
+ylabel('dstd_N [m/s]') 
+title('dstd_N over mean WS_N')
 
 subplot(2,2,4);
 hold on; box on; grid on;
-scatter(Reference_10min.LOS_S_mean,d_TI_S,'.')
+scatter(Reference_10min.LOS_S_mean,d_std_S,'.')
 xlabel('mean WS_S [m/s]')
-ylabel('dTI_S [m/s]') 
-title('dTI_S over mean WS_S')
+ylabel('dstd_S [m/s]') 
+title('dstd_S over mean WS_S')
 
-figure('name','Histogram dTI')
+figure('name','Histogram dstd')
 subplot(2,1,1);
 hold on; box on; grid on;
-histogram(d_TI_N)
-xlabel('dTI_N [m/s]')
+histogram(d_std_N)
+xlabel('dstd_N [m/s]')
 ylabel('n') 
-title('dTI_N')
+title('dstd_N')
 
 subplot(2,1,2);
 hold on; box on; grid on;
-histogram(d_TI_S)
-xlabel('dTI_S [m/s]')
+histogram(d_std_S)
+xlabel('dstd_S [m/s]')
 ylabel('n') 
-title('dTI_S')
+title('dstd_S')
 
-mean_d_TI_N = mean(d_TI_N);
-mean_d_TI_S = mean(d_TI_S);
+mean_d_std_N = mean(d_std_N);
+mean_d_std_S = mean(d_std_S);
 
-Lidar_10min.LOS_N_std_fit1 = Lidar_10min.LOS_N_std + mean_d_TI_N;
-Lidar_10min.LOS_S_std_fit1 = Lidar_10min.LOS_S_std + mean_d_TI_S;
+Lidar_10min.LOS_N_std_fit1 = Lidar_10min.LOS_N_std + mean_d_std_N;
+Lidar_10min.LOS_S_std_fit1 = Lidar_10min.LOS_S_std + mean_d_std_S;
 
 Lidar_10min.LOS_TI_N_fit1 = Lidar_10min.LOS_N_std_fit1./Lidar_10min.LOS_N_mean; 
 Lidar_10min.LOS_TI_S_fit1 = Lidar_10min.LOS_S_std_fit1./Lidar_10min.LOS_S_mean;
@@ -162,29 +162,29 @@ Lidar_10min.LOS_TI_S_fit1 = Lidar_10min.LOS_S_std_fit1./Lidar_10min.LOS_S_mean;
 m           = 2;
 n           = 2;
 
-range_TI = [0, 0.5];
+range_TI = [0, 2];
 
-figure('Name','Lidar TI vs Reference TI')
+figure('Name','Lidar std vs Reference std')
 
-RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
-    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+RegressionSubPlot(m,n,1,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std,...
+    range_TI,'std Reference_N','std Lidar_N','10 min std North');
 
-RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
-    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
+RegressionSubPlot(m,n,2,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std,...
+    range_TI, 'std Reference_S','std Lidar_S','10 min std South');
 
-RegressionSubPlot(m,n,3,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N_fit1,...
-    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+RegressionSubPlot(m,n,3,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit1,...
+    range_TI,'std Reference_N','std Lidar_N','10 min std North Fit1');
 
-RegressionSubPlot(m,n,4,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S_fit1,...
-    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South'); 
-% Fit 1 works for South Mast 
-% on North Mast problem with the incline of the Fit
+RegressionSubPlot(m,n,4,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std_fit1,...
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South Fit1'); 
+% Fit 1 works for TI on south, but now we plot std against std it doesn't
+% fit that nice as TI against Ti
 %% Fit incline on North Mast
-if Lidar_10min.LOS_N_mean <= 5.75;
+if Lidar_10min.LOS_N_mean <= 5.75
     Lidar_10min.LOS_N_std_fit2 = Lidar_10min.LOS_N_std + 0.75;
 else
     Lidar_10min.LOS_N_mean > 5.75;
-    Lidar_10min.LOS_N_std_fit2 = Lidar_10min.LOS_N_std + mean_d_TI_N;
+    Lidar_10min.LOS_N_std_fit2 = Lidar_10min.LOS_N_std + mean_d_std_N;
 end
     
 Lidar_10min.LOS_TI_N_fit2 = Lidar_10min.LOS_N_std_fit2./Lidar_10min.LOS_N_mean; 
