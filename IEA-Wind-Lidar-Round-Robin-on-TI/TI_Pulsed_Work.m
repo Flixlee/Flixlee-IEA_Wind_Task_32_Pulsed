@@ -164,7 +164,7 @@ n           = 2;
 
 range_TI = [0, 2];
 
-figure('Name','Lidar std vs Reference std')
+figure('Name','Lidar std Fit 1 vs Reference std')
 
 RegressionSubPlot(m,n,1,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std,...
     range_TI,'std Reference_N','std Lidar_N','10 min std North');
@@ -176,25 +176,44 @@ RegressionSubPlot(m,n,3,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit1,...
     range_TI,'std Reference_N','std Lidar_N','10 min std North Fit1');
 
 RegressionSubPlot(m,n,4,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std_fit1,...
-    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South Fit1'); 
-% Fit 1 works for TI on south, but now we plot std against std it doesn't
-% fit that nice as TI against Ti
-%% Fit incline on North Mast
-if Lidar_10min.LOS_N_mean <= 5.75
-    Lidar_10min.LOS_N_std_fit2 = Lidar_10min.LOS_N_std + 0.75;
-else
-    Lidar_10min.LOS_N_mean > 5.75;
-    Lidar_10min.LOS_N_std_fit2 = Lidar_10min.LOS_N_std + mean_d_std_N;
-end
-    
-Lidar_10min.LOS_TI_N_fit2 = Lidar_10min.LOS_N_std_fit2./Lidar_10min.LOS_N_mean; 
+    range_TI, 'std Reference_S','std Lidar_S','10 min std South Fit1'); 
+% Fit 1 works with a simpel offset not with the linear eq
 
+% Fit 1.2 fits with the linear eq of the std calculation
+
+fit_m_N = 100/97;
+fit_b_N = 0.02;
+
+fit_m_S = 100/91;
+fit_b_S = 0.03;
+
+Lidar_10min.LOS_N_std_fit1_2 = Lidar_10min.LOS_N_std .* fit_m_N + fit_b_N;
+Lidar_10min.LOS_S_std_fit1_2 = Lidar_10min.LOS_S_std .* fit_m_S + fit_b_S;
+
+Lidar_10min.LOS_TI_N_fit1_2 = Lidar_10min.LOS_N_std_fit1_2./Lidar_10min.LOS_N_mean; 
+Lidar_10min.LOS_TI_S_fit1_2 = Lidar_10min.LOS_S_std_fit1_2./Lidar_10min.LOS_S_mean;
+
+figure('Name','Lidar std Fit 1.2 vs Reference std')
+
+RegressionSubPlot(m,n,1,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std,...
+    range_TI,'std Reference_N','std Lidar_N','10 min std North');
+
+RegressionSubPlot(m,n,2,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std,...
+    range_TI, 'std Reference_S','std Lidar_S','10 min std South');
+
+RegressionSubPlot(m,n,3,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit1_2,...
+    range_TI,'std Reference_N','std Lidar_N','10 min std North Fit1.2');
+
+RegressionSubPlot(m,n,4,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std_fit1_2,...
+    range_TI, 'std Reference_S','std Lidar_S','10 min std South Fit1.2');
+
+%% TI Comparison Fit1 and Fit1.2
 m           = 2;
 n           = 2;
 
 range_TI = [0, 0.5];
 
-figure('Name','Lidar TI vs Reference TI')
+figure('Name','Lidar TI Fit 1 vs Reference TI')
 
 RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
     range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
@@ -202,11 +221,28 @@ RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
 RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
     range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
 
-RegressionSubPlot(m,n,3,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N_fit2,...
-    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+RegressionSubPlot(m,n,3,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N_fit1,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North Fit1');
 
 RegressionSubPlot(m,n,4,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S_fit1,...
-    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');    
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min Ti South Fit1');
+
+figure('Name','Lidar TI Fit 1 vs Reference TI')
+
+RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+
+RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
+
+RegressionSubPlot(m,n,3,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N_fit1_2,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North Fit1.2');
+
+RegressionSubPlot(m,n,4,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S_fit1_2,...
+    range_TI, 'TI Reference_S','TI Lidar_S','10 min Ti South Fit1.2');  
+
+% The simple offset works nice on the south fit for north we have to use
+% the linear eq fit (fit 1.2) but this fit isnt finished yet.
 %% Load Lidar Period 2
 if isfile('Data_2.mat') % datenum takes a while, so we better store the data
     load('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
@@ -220,7 +256,7 @@ else
   
     Lidar_N_2.t     	= datenum(Lidar_N_2.Timestamp,'yyyy-mm-ddTHH:MM:SS.FFF');
     Lidar_S_2.t      	= datenum(Lidar_S_2.Timestamp,'yyyy-mm-ddTHH:MM:SS.FFF');
-    Lidar_10min_2.t     = datenum(Lidar_10min_2.DateAndTime); % HILFE David
+    Lidar_10min_2.t     = datenum(Lidar_10min_2.DateAndTime); % doesnt work right now
     save('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
 end
 
