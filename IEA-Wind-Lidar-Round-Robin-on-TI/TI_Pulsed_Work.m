@@ -206,12 +206,39 @@ RegressionSubPlot(m,n,3,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit1_2,..
 
 RegressionSubPlot(m,n,4,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std_fit1_2,...
     range_TI, 'std Reference_S','std Lidar_S','10 min std South Fit1.2');
+%% Fit 2
+d_std = [d_std_N,Lidar_10min.LOS_N_mean'];
+d_low_WS= zeros(144,1);
+d_high_WS= zeros(144,1);
+for i_10min= 1:n_10min
+    if d_std(i_10min,2)<=5.5
+       d_low_WS(i_10min) = d_std(i_10min,1);
+        
+    else 
+        d_high_WS(i_10min) = d_std(i_10min,1);
+    end 
+end
 
-%% TI Comparison Fit1 and Fit1.2
+mean_d_std_low = mean(d_low_WS);
+mean_d_std_high = mean(d_high_WS);
+
+Lidar_10min.LOS_N_std_fit2 = zeros(144,1)';
+
+for i_10min= 1:n_10min
+    if d_std(i_10min,2)<=5.5
+       Lidar_10min.LOS_N_std_fit2(i_10min) = Lidar_10min.LOS_N_std(i_10min) + mean_d_std_low;
+    
+    else
+        Lidar_10min.LOS_N_std_fit2(i_10min) = Lidar_10min.LOS_N_std(i_10min) + mean_d_std_high;
+    end
+end
+
+Lidar_10min.LOS_TI_N_fit2 = Lidar_10min.LOS_N_std_fit2./Lidar_10min.LOS_N_mean; 
+%% TI Comparison Fit1;1.2;2
 m           = 2;
 n           = 2;
 
-range_TI = [0, 0.5];
+range_TI = [0, 0.6];
 
 figure('Name','Lidar TI Fit 1 vs Reference TI')
 
@@ -241,8 +268,14 @@ RegressionSubPlot(m,n,3,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N_fit1_2,...
 RegressionSubPlot(m,n,4,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S_fit1_2,...
     range_TI, 'TI Reference_S','TI Lidar_S','10 min Ti South Fit1.2');  
 
-% The simple offset works nice on the south fit for north we have to use
-% the linear eq fit (fit 1.2) but this fit isnt finished yet.
+figure('Name','Lidar TI Fit 2 vs Reference TI')
+
+RegressionSubPlot(m,n,1,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North');
+
+RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_N,Lidar_10min.LOS_TI_N_fit2,...
+    range_TI,'TI Reference_N','TI Lidar_N','10 min TI North Fit2');
+
 %% Load Lidar Period 2
 if isfile('Data_2.mat') % datenum takes a while, so we better store the data
     load('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
@@ -259,4 +292,18 @@ else
     Lidar_10min_2.t     = datenum(Lidar_10min_2.DateAndTime); % doesnt work right now
     save('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
 end
+%% TI Period 2 unfitted
+Tstart_2          = '2020-10-20 00:00:00';
+Tend_2            = '2020-10-24 23:59:59';
+Lidar_10min_2_o  = Calculate10minStastics_Lidar_2(Lidar_N_2,Lidar_S_2,Tstart_2,Tend_2);
+Lidar_10min_2_o.LOS_TI_N_2 = Lidar_10min_2_o.LOS_N_std./Lidar_10min_2_o.LOS_N_mean; 
+Lidar_10min_2_o.LOS_TI_S_2 = Lidar_10min_2_o.LOS_S_std./Lidar_10min_2_o.LOS_S_mean; 
 
+Lidar_10min_2_o.t = zeros(719,1)';
+i=1; 
+for ix=1:1:719 
+        Lidar_10min_2_o.t(ix) = Lidar_N_2.t(i);
+        i= i+150;
+end
+       
+Timecomparison_Lidar_2(Tstart_2,Tend_2,Lidar_10min_2_o);
