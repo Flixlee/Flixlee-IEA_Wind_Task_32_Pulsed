@@ -34,7 +34,7 @@ RegressionSubPlot(m,n,2,Reference_10min.LOS_TI_S,Lidar_10min.LOS_TI_S,...
     range_TI, 'TI Reference_S','TI Lidar_S','10 min TI South');
 
 Lidar_Ref_statistics(Lidar_10min,Reference_10min)
- 
+Timecomparison_Lidar(Tstart,Tend,Lidar_10min) 
 %% Sonic Data Comparison
 %statistics
 t1                          = datetime(Tstart); 
@@ -162,7 +162,7 @@ Lidar_10min.LOS_TI_S_fit1 = Lidar_10min.LOS_S_std_fit1./Lidar_10min.LOS_S_mean;
 m           = 2;
 n           = 2;
 
-range_TI = [0, 2];
+range_TI = [0, 2.5];
 
 figure('Name','Lidar std Fit 1 vs Reference std')
 
@@ -289,7 +289,7 @@ else
   
     Lidar_N_2.t     	= datenum(Lidar_N_2.Timestamp,'yyyy-mm-ddTHH:MM:SS.FFF');
     Lidar_S_2.t      	= datenum(Lidar_S_2.Timestamp,'yyyy-mm-ddTHH:MM:SS.FFF');
-    Lidar_10min_2.t     = datenum(Lidar_10min_2.DateAndTime); % doesnt work right now
+    Lidar_10min_2.t     = datenum(Lidar_10min_2.DateAndTime,'yyyy-mm-ddTHH:MM:SS.FFF'); % doesnt work right now, unused so far
     save('Data_2.mat','Lidar_N_2','Lidar_S_2','Lidar_10min_2');
 end
 %% TI Period 2 unfitted
@@ -305,5 +305,27 @@ for ix=1:1:719
         Lidar_10min_2_o.t(ix) = Lidar_N_2.t(i);
         i= i+150;
 end
-       
+   
+inaccuracy = (-0.5>Lidar_10min_2_o.LOS_TI_N_2)|(Lidar_10min_2_o.LOS_TI_N_2>0.5);
+Lidar_10min_2_o.LOS_TI_N_2(inaccuracy)=interp1(Lidar_10min_2_o.t(~inaccuracy),Lidar_10min_2_o.LOS_TI_N_2(~inaccuracy),Lidar_10min_2_o.t(inaccuracy));
+
+inaccuracy = (-0.5>Lidar_10min_2_o.LOS_TI_S_2)|(Lidar_10min_2_o.LOS_TI_S_2>0.5);
+Lidar_10min_2_o.LOS_TI_S_2(inaccuracy)=interp1(Lidar_10min_2_o.t(~inaccuracy),Lidar_10min_2_o.LOS_TI_S_2(~inaccuracy),Lidar_10min_2_o.t(inaccuracy));
+
 Timecomparison_Lidar_2(Tstart_2,Tend_2,Lidar_10min_2_o);
+%% TI Period 2 fitted
+% North fit -> take fit 1.2 for North
+Lidar_10min_2_o.LOS_N_std_fit = Lidar_10min_2_o.LOS_N_std .* fit_m_N + fit_b_N;
+% South fit -> take fit 1 for South
+Lidar_10min_2_o.LOS_S_std_fit = Lidar_10min_2_o.LOS_S_std + mean_d_std_S;
+
+Lidar_10min_2_o.LOS_TI_N_2_fit = Lidar_10min_2_o.LOS_N_std_fit./Lidar_10min_2_o.LOS_N_mean; 
+Lidar_10min_2_o.LOS_TI_S_2_fit = Lidar_10min_2_o.LOS_S_std_fit./Lidar_10min_2_o.LOS_S_mean;
+
+inaccuracy = (-0.5>Lidar_10min_2_o.LOS_TI_N_2_fit)|(Lidar_10min_2_o.LOS_TI_N_2_fit>0.5);
+Lidar_10min_2_o.LOS_TI_N_2_fit(inaccuracy)=interp1(Lidar_10min_2_o.t(~inaccuracy),Lidar_10min_2_o.LOS_TI_N_2_fit(~inaccuracy),Lidar_10min_2_o.t(inaccuracy));
+
+inaccuracy = (-0.5>Lidar_10min_2_o.LOS_TI_S_2_fit)|(Lidar_10min_2_o.LOS_TI_S_2_fit>0.5);
+Lidar_10min_2_o.LOS_TI_S_2_fit(inaccuracy)=interp1(Lidar_10min_2_o.t(~inaccuracy),Lidar_10min_2_o.LOS_TI_S_2_fit(~inaccuracy),Lidar_10min_2_o.t(inaccuracy));
+
+Timecomparison_Lidar_2_fit(Tstart_2,Tend_2,Lidar_10min_2_o)
