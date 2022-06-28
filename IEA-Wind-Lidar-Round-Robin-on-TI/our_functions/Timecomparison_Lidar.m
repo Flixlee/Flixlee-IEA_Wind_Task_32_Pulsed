@@ -8,7 +8,7 @@ hold on; box on; grid on;
 scatter(Lidar_10min.t,Lidar_10min.LOS_TI_N,'.')
 xlim(MyXlim)
 datetick('x','keeplimits')
-ylabel('TI in m/s') 
+ylabel('TI Lidar') 
 title('TI_N')
 
 
@@ -17,7 +17,7 @@ hold on; box on; grid on;
 scatter(Lidar_10min.t,Lidar_10min.LOS_TI_S,'.')
 xlim(MyXlim)
 datetick('x','keeplimits')
-ylabel('TI in m/s') 
+ylabel('TI Lidar') 
 title('TI_S')
 
 
