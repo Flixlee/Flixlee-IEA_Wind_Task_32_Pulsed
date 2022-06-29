@@ -162,21 +162,21 @@ Lidar_10min.LOS_TI_S_fit1 = Lidar_10min.LOS_S_std_fit1./Lidar_10min.LOS_S_mean;
 m           = 2;
 n           = 2;
 
-range_TI = [0, 2.5];
+range_Std = [0, 2.5];
 
 figure('Name','Lidar Std Fit 1 vs Reference Std')
 
 RegressionSubPlot(m,n,1,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std,false,...
-    range_TI,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North');
+    range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North');
 
 RegressionSubPlot(m,n,2,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std,false,...
-    range_TI, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South');
+    range_Std, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South');
 
 RegressionSubPlot(m,n,3,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit1,false,...
-    range_TI,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North Fit1');
+    range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North Fit1');
 
 RegressionSubPlot(m,n,4,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std_fit1,false,...
-    range_TI, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South Fit1'); 
+    range_Std, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South Fit1'); 
 % Fit 1 works with a simpel offset not with the linear eq
 
 %% Fit 2 fits with the linear eq of the std calculation
@@ -196,16 +196,16 @@ Lidar_10min.LOS_TI_S_fit2 = Lidar_10min.LOS_S_std_fit2./Lidar_10min.LOS_S_mean;
 figure('Name','Lidar Std Fit 2 vs Reference Std')
 
 RegressionSubPlot(m,n,1,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std,false,...
-    range_TI,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North');
+    range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North');
 
 RegressionSubPlot(m,n,2,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std,false,...
-    range_TI, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South');
+    range_Std, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South');
 
 RegressionSubPlot(m,n,3,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit2,false,...
-    range_TI,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North Fit1.2');
+    range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North Fit2');
 
 RegressionSubPlot(m,n,4,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std_fit2,false,...
-    range_TI, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South Fit1.2');
+    range_Std, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South Fit2');
 %% Fit 1.2
 d_std = [d_std_N,Lidar_10min.LOS_N_mean'];
 d_low_WS= zeros(144,1);
@@ -233,12 +233,17 @@ for i_10min= 1:n_10min
     end
 end
 
+RegressionSubPlot(1,n,1,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std,false,...
+    range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North');
+RegressionSubPlot(1,n,2,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit1_2,false,...
+    range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North Fit2');
+
 Lidar_10min.LOS_TI_N_fit1_2 = Lidar_10min.LOS_N_std_fit1_2./Lidar_10min.LOS_N_mean; 
 %% TI Comparison Fit1;1.2;2 
 m           = 2;
 n           = 2; 
 
-range_TI = [0, 0.6];
+range_TI = [0, 0.7];
 
 figure('Name','Lidar TI Fit 1 vs Reference TI')
 
@@ -305,18 +310,19 @@ for ix=1:1:719
         Lidar_10min_2_o.t(ix) = Lidar_N_2.t(i);
         i= i+150;
 end
-
+Timecomparison_Lidar_2_raw(Tstart_2,Tend_2,Lidar_10min_2_o)
 %% Find inaccurate mean values and set them to NaN
-figure 
-plot(Lidar_10min_2_o.LOS_N_mean,Lidar_10min_2_o.LOS_TI_N_2,'.');
+figure
+subplot(2,1,1);
 hold on; box on; grid on;
+plot(Lidar_10min_2_o.LOS_N_mean,Lidar_10min_2_o.LOS_TI_N_2,'.');
 title('inaccurate mean values N')
 ylim([-1 1]);
 xlabel('LOS mean N [m/s]')
 ylabel('LOS TI N')
 % inaccurate mean values North set to -1.5<inmeanv_N<1.5
 
-figure
+subplot(2,1,2);
 hold on; box on; grid on;
 plot(Lidar_10min_2_o.LOS_S_mean,Lidar_10min_2_o.LOS_TI_S_2,'.');
 title('inaccurate mean values S')
