@@ -236,7 +236,7 @@ end
 RegressionSubPlot(1,n,1,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std,false,...
     range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North');
 RegressionSubPlot(1,n,2,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit1_2,false,...
-    range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North Fit2');
+    range_Std,'Std Reference_N [m/s]','Std Lidar_N [m/s]','10 min Std North Fit1.2');
 
 Lidar_10min.LOS_TI_N_fit1_2 = Lidar_10min.LOS_N_std_fit1_2./Lidar_10min.LOS_N_mean; 
 %% TI Comparison Fit1;1.2;2 
