@@ -1,6 +1,9 @@
 clearvars;clc;close all
 RoundRoubin_ReferencePulsed
 addpath('our_functions')
+% Pulsed Pirates attemped to calculate the TI estimation for the pulsed
+% Lidar data
+% Members: Felix Lehmann, Jonas Borchert, Matthias Schrade, Niklas Freiberg
 %% Task 1 Part1: clean data (9999 in Lidar_N.RWS bzw Lidar_S.RWS)
 
 mistake = Lidar_N.RWS==9999; %Logical Array 
@@ -177,9 +180,8 @@ RegressionSubPlot(m,n,3,Reference_10min.WS_N_std,Lidar_10min.LOS_N_std_fit1,fals
 
 RegressionSubPlot(m,n,4,Reference_10min.WS_S_std,Lidar_10min.LOS_S_std_fit1,false,...
     range_Std, 'Std Reference_S [m/s]','Std Lidar_S [m/s]','10 min Std South Fit1'); 
-% Fit 1 works with a simpel offset not with the linear eq
 
-%% Fit 2 fits with the linear eq of the std calculation
+%% Fit 2: fits with the linear eq of the std calculation
 
 fit_m_N = 100/97;
 fit_b_N = 0.02;
@@ -348,7 +350,7 @@ Lidar_10min_2_o.LOS_N_std_fit = Lidar_10min_2_o.LOS_N_std .* fit_m_N + fit_b_N;
 % South fit -> take fit 1 for South
 Lidar_10min_2_o.LOS_S_std_fit = Lidar_10min_2_o.LOS_S_std + mean_d_std_S;
 
-Lidar_10min_2_o.LOS_TI_N_2_fit = Lidar_10min_2_o.LOS_N_std_fit./Lidar_10min_2_o.LOS_N_mean; % csv datei als abgabe
-Lidar_10min_2_o.LOS_TI_S_2_fit = Lidar_10min_2_o.LOS_S_std_fit./Lidar_10min_2_o.LOS_S_mean; % csv datei als abgabe
+Lidar_10min_2_o.LOS_TI_N_2_fit = Lidar_10min_2_o.LOS_N_std_fit./Lidar_10min_2_o.LOS_N_mean; % store in csv as solution
+Lidar_10min_2_o.LOS_TI_S_2_fit = Lidar_10min_2_o.LOS_S_std_fit./Lidar_10min_2_o.LOS_S_mean; % store in csv as solution 
 
 Timecomparison_Lidar_2_fit(Tstart_2,Tend_2,Lidar_10min_2_o)
