@@ -354,3 +354,10 @@ Lidar_10min_2_o.LOS_TI_N_2_fit = Lidar_10min_2_o.LOS_N_std_fit./Lidar_10min_2_o.
 Lidar_10min_2_o.LOS_TI_S_2_fit = Lidar_10min_2_o.LOS_S_std_fit./Lidar_10min_2_o.LOS_S_mean; % store in csv as solution 
 
 Timecomparison_Lidar_2_fit(Tstart_2,Tend_2,Lidar_10min_2_o)
+
+%% csv storage:
+Final_TI_N = array2table(Lidar_10min_2_o.LOS_TI_N_2_fit);
+Final_TI_S = array2table(Lidar_10min_2_o.LOS_TI_S_2_fit); 
+
+writetable(Final_TI_N,'Final_TI_Estimation_N_pulsedpirates.csv')
+writetable(Final_TI_S,'Final_TI_Estimation_S_pulsedpirates.csv')
